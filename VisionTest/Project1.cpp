@@ -7,6 +7,28 @@
 using namespace cv;
 using namespace std;
 
+float trap_bottom_width = 0.85;  // width of bottom edge of trapezoid, expressed as percentage of image width
+float trap_top_width = 0.07;     // ditto for top edge of trapezoid
+float trap_height = 0.4;
+
+
+Mat region_of_interest(Mat img_edges, Point *points)
+{
+    Mat img_mask = Mat::zeros(img_edges.rows, img_edges.cols, CV_8UC1);
+
+    Scalar ignore_mask_color = Scalar(255, 255, 255);
+    const Point* ppt[1] = { points };
+    int npt[] = { 4 };
+
+    fillPoly(img_mask, ppt, npt, 1, Scalar(255, 255, 255), LINE_8);
+
+    Mat img_masked;
+    bitwise_and(img_edges, img_mask, img_masked);
+
+    return img_masked;
+}
+
+
 int main(int argc, char* argv[])
 {
     //Open the default video camera
@@ -35,6 +57,8 @@ int main(int argc, char* argv[])
     while (true)
     {
         Mat frame, grayImage, edgeImage;
+        vector<vector<Point>> contours;
+        vector<Vec4i> hierarchy;
         bool bSuccess = cap.read(frame); // read a new frame from video 
 
         if (bSuccess == false)
@@ -48,6 +72,15 @@ int main(int argc, char* argv[])
 
         Canny(grayImage, edgeImage, 80, 150, 3);
 
+       //영역 설정
+        Point points[4];
+        points[0] = Point((dWidth * (1 - trap_bottom_width)) / 2, dHeight);
+        points[1] = Point((dWidth * (1 - trap_top_width)) / 2, dHeight - dHeight * trap_height);
+        points[2] = Point(dWidth - (dWidth * (1 - trap_top_width)) / 2, dHeight - dHeight * trap_height);
+        points[3] = Point(dWidth - (dWidth * (1 - trap_bottom_width)) / 2, dHeight);
+
+        edgeImage = region_of_interest(edgeImage, points);
+      
         //Breaking the while loop if the frames cannot be captured
         
         //show the frame in the created window
