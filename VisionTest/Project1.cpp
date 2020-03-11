@@ -37,6 +37,9 @@ int main(int argc, char* argv[])
         Mat frame, grayImage, edgeImage;
         bool bSuccess = cap.read(frame); // read a new frame from video 
 
+        cout << "hello2" << endl;
+        cout << "Asdfdsf" << endl;
+
         if (bSuccess == false)
         {
             cout << "Video camera is disconnected" << endl;
