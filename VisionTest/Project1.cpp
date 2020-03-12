@@ -8,8 +8,8 @@ using namespace cv;
 using namespace std;
 
 float trap_bottom_width = 0.85;  // width of bottom edge of trapezoid, expressed as percentage of image width
-float trap_top_width = 0.07;     // ditto for top edge of trapezoid
-float trap_height = 0.4;
+float trap_top_width = 0.1;     // ditto for top edge of trapezoid
+float trap_height = 0.5;
 
 
 Mat region_of_interest(Mat img_edges, Point *points)
@@ -74,10 +74,10 @@ int main(int argc, char* argv[])
 
        //영역 설정
         Point points[4];
-        points[0] = Point((dWidth * (1 - trap_bottom_width)) / 2, dHeight);
-        points[1] = Point((dWidth * (1 - trap_top_width)) / 2, dHeight - dHeight * trap_height);
-        points[2] = Point(dWidth - (dWidth * (1 - trap_top_width)) / 2, dHeight - dHeight * trap_height);
-        points[3] = Point(dWidth - (dWidth * (1 - trap_bottom_width)) / 2, dHeight);
+        points[0] = Point(dWidth * 0.8, dHeight);
+        points[1] = Point(dWidth / 2, dHeight);
+        points[2] = Point(dWidth /2 ,0);
+        points[3] = Point(dWidth * 0.8 , 0);
 
         edgeImage = region_of_interest(edgeImage, points);
       
